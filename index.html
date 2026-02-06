@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CourseShare | Resource Sharing for Students & Alumni</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles/index.css">
+</head>
+<body>
+
+    <div id="preloader">
+        <div class="spinner"></div>
+    </div>
+    
+    <div id="auth-modal" class="fixed inset-0 z-[100] transition-opacity duration-300" style="display: none;">
+        <div class="absolute inset-0 bg-black/50" onclick="closeAuthModal()"></div>
+
+        <div id="auth-modal-content" class="absolute top-0 right-0 h-full w-full max-w-sm bg-white shadow-2xl overflow-y-auto">
+            
+            <div class="p-8 relative">
+                <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-900 transition-colors z-10">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+
+                <div id="auth-message-box" class="p-3 mb-4 rounded-lg text-sm transition-opacity duration-300 opacity-0" role="alert" style="display: none;"></div>
+
+                <div id="auth-view-container">
+                    
+                    <!-- LOGIN VIEW -->
+                    <div id="login-view" class="space-y-6">
+                        <h2 class="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h2>
+                        <p class="text-gray-500">Log in to access your shared resources.</p>
+                        
+                        <form id="login-form" onsubmit="handleLogin(event)" class="mt-8 space-y-4 relative">
+                            <div id="login-loading" class="loading-overlay">
+                                <div class="text-center">
+                                    <div class="loading-spinner mx-auto mb-3"></div>
+                                    <p class="text-gray-600 text-sm font-medium">Logging in...</p>
+                                </div>
+                            </div>
+
+                            <div class="input-group">
+                                <input id="login-username" type="text" required oninput="validateInput(this)" class="input-field focus:ring-0" placeholder=" ">
+                                <label for="login-username" class="input-label">Username</label>
+                                <p id="login-username-msg" class="validation-message"></p>
+                            </div>
+
+                            <div class="input-group">
+                                <input id="login-password" type="password" required oninput="validateInput(this)" class="input-field focus:ring-0" placeholder=" ">
+                                <label for="login-password" class="input-label">Password</label>
+                                <p id="login-password-msg" class="validation-message"></p>
+                            </div>
+
+                            <button type="submit" class="btn-primary w-full text-white px-5 py-3 rounded-lg font-semibold shadow-lg mt-6">Login</button>
+                        </form>
+                        
+                        <p class="text-center text-sm text-gray-500">
+                            Don't have an account?
+                            <a href="#" onclick="showRegisterView(event)" class="text-[#2563eb] font-medium hover:underline">Register here</a>
+                        </p>
+
+                        <div class="text-right pt-1" style="text-align: center; margin-top: 20px;">
+                            <a href="#" onclick="showForgotPasswordView(event)" class="text-xs text-gray-500 hover:text-[#2563eb] hover:underline transition-colors">Forgot Password?</a>
+                        </div>   
+                    </div>
+
+                    <!-- REGISTER VIEW -->
+                    <div id="register-view" class="space-y-6 hidden">
+                        <h2 class="text-3xl font-bold text-gray-900 mb-2">Join CourseShare</h2>
+                        <p class="text-gray-500">Create your account to start sharing and learning.</p>
+                        
+                        <form id="register-form" onsubmit="handleRegister(event)" class="mt-8 space-y-4 relative">
+                            <div id="register-loading" class="loading-overlay">
+                                <div class="text-center">
+                                    <div class="loading-spinner mx-auto mb-3"></div>
+                                    <p class="text-gray-600 text-sm font-medium">Creating your account...</p>
+                                </div>
+                            </div>
+
+                            <div class="input-group">
+                                <input id="register-username" type="text" required oninput="validateRegisterUsername(this)" class="input-field focus:ring-0" placeholder=" ">
+                                <label for="register-username" class="input-label">Username</label>
+                                <p id="register-username-msg" class="validation-message"></p>
+                            </div>
+
+                            <div class="input-group">
+                                <input id="register-email" type="email" required oninput="validateRegisterEmail(this)" class="input-field focus:ring-0" placeholder=" ">
+                                <label for="register-email" class="input-label">Email Address</label>
+                                <p id="register-email-msg" class="validation-message"></p>
+                            </div>
+
+                            <div class="input-group">
+                                <input id="register-password" type="password" required oninput="validateRegisterPassword(this)" class="input-field focus:ring-0" placeholder=" ">
+                                <label for="register-password" class="input-label">Password</label>
+                                <p id="register-password-msg" class="validation-message"></p>
+                            </div>
+
+                            <div class="input-group">
+                                <input id="register-confirm-password" type="password" required oninput="validateRegisterConfirmPassword(this)" class="input-field focus:ring-0" placeholder=" ">
+                                <label for="register-confirm-password" class="input-label">Confirm Password</label>
+                                <p id="register-confirm-password-msg" class="validation-message"></p>
+                            </div>
+
+                            <button type="submit" class="btn-primary w-full text-white px-5 py-3 rounded-lg font-semibold shadow-lg mt-6">Register Account</button>
+                        </form>
+
+                        <p class="text-center text-sm text-gray-500">
+                            Already have an account?
+                            <a href="#" onclick="showLoginView(event)" class="text-[#2563eb] font-medium hover:underline">Login here</a>
+                        </p>
+                    </div>
+
+                    <!-- FORGOT PASSWORD VIEW -->
+                    <div id="forgot-password-view" class="space-y-6 hidden">
+                        <h2 class="text-3xl font-bold text-gray-900 mb-2">Reset Password</h2>
+                        <p class="text-gray-500">Enter your email address and we'll send you an OTP to reset your password.</p>
+                        
+                        <form id="forgot-password-form" onsubmit="handleForgotPassword(event)" class="mt-8 space-y-4 relative">
+                            <div id="forgot-loading" class="loading-overlay">
+                                <div class="text-center">
+                                    <div class="loading-spinner mx-auto mb-3"></div>
+                                    <p class="text-gray-600 text-sm font-medium">Sending OTP...</p>
+                                </div>
+                            </div>
+
+                            <div class="input-group">
+                                <input id="forgot-email" type="email" required oninput="validateRegisterEmail(this)" class="input-field focus:ring-0" placeholder=" ">
+                                <label for="forgot-email" class="input-label">Email Address</label>
+                                <p id="forgot-email-msg" class="validation-message"></p>
+                            </div>
+
+                            <button type="submit" class="btn-primary w-full text-white px-5 py-3 rounded-lg font-semibold shadow-lg mt-6">Send OTP</button>
+                        </form>
+
+                        <p class="text-center text-sm text-gray-500">
+                            <a href="#" onclick="showLoginView(event)" class="text-[#2563eb] font-medium hover:underline">&larr; Back to Login</a>
+                        </p>
+                    </div>
+
+                    <!-- OTP VERIFICATION VIEW -->
+                    <div id="otp-verification-view" class="space-y-6 hidden">
+                        <h2 class="text-3xl font-bold text-gray-900 mb-2">Verify OTP</h2>
+                        <p class="text-gray-500">Enter the 6-digit code sent to your email.</p>
+                        
+                        <form id="otp-form" onsubmit="handleOTPVerification(event)" class="mt-8 space-y-6 relative">
+                            <div id="otp-loading" class="loading-overlay">
+                                <div class="text-center">
+                                    <div class="loading-spinner mx-auto mb-3"></div>
+                                    <p class="text-gray-600 text-sm font-medium">Verifying OTP...</p>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-center gap-2">
+                                <input type="text" maxlength="1" class="otp-input" id="otp-1" oninput="handleOTPInput(event, 1)" onkeydown="handleOTPKeydown(event, 1)" required>
+                                <input type="text" maxlength="1" class="otp-input" id="otp-2" oninput="handleOTPInput(event, 2)" onkeydown="handleOTPKeydown(event, 2)" required>
+                                <input type="text" maxlength="1" class="otp-input" id="otp-3" oninput="handleOTPInput(event, 3)" onkeydown="handleOTPKeydown(event, 3)" required>
+                                <input type="text" maxlength="1" class="otp-input" id="otp-4" oninput="handleOTPInput(event, 4)" onkeydown="handleOTPKeydown(event, 4)" required>
+                                <input type="text" maxlength="1" class="otp-input" id="otp-5" oninput="handleOTPInput(event, 5)" onkeydown="handleOTPKeydown(event, 5)" required>
+                                <input type="text" maxlength="1" class="otp-input" id="otp-6" oninput="handleOTPInput(event, 6)" onkeydown="handleOTPKeydown(event, 6)" required>
+                            </div>
+
+                            <p class="text-center text-sm text-gray-500">
+                                Didn't receive the code? 
+                                <a href="#" onclick="resendOTP(event)" class="text-[#2563eb] font-medium hover:underline">Resend OTP</a>
+                            </p>
+                        </form>
+
+                        <p class="text-center text-sm text-gray-500">
+                            <a href="#" onclick="showForgotPasswordView(event)" class="text-[#2563eb] font-medium hover:underline">&larr; Back</a>
+                        </p>
+                    </div>
+
+                    <!-- NEW PASSWORD VIEW -->
+                    <div id="new-password-view" class="space-y-6 hidden">
+                        <h2 class="text-3xl font-bold text-gray-900 mb-2">Create New Password</h2>
+                        <p class="text-gray-500">Enter your new password to complete the reset process.</p>
+                        
+                        <form id="new-password-form" onsubmit="handleNewPassword(event)" class="mt-8 space-y-4 relative">
+                            <div id="new-password-loading" class="loading-overlay">
+                                <div class="text-center">
+                                    <div class="loading-spinner mx-auto mb-3"></div>
+                                    <p class="text-gray-600 text-sm font-medium">Resetting password...</p>
+                                </div>
+                            </div>
+
+                            <div class="input-group">
+                                <input id="new-password" type="password" required oninput="validateNewPassword(this)" class="input-field focus:ring-0" placeholder=" ">
+                                <label for="new-password" class="input-label">New Password</label>
+                                <p id="new-password-msg" class="validation-message"></p>
+                            </div>
+
+                            <div class="input-group">
+                                <input id="confirm-new-password" type="password" required oninput="validateConfirmNewPassword(this)" class="input-field focus:ring-0" placeholder=" ">
+                                <label for="confirm-new-password" class="input-label">Confirm New Password</label>
+                                <p id="confirm-new-password-msg" class="validation-message"></p>
+                            </div>
+
+                            <button type="submit" class="btn-primary w-full text-white px-5 py-3 rounded-lg font-semibold shadow-lg mt-6">Reset Password</button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <div id="main-content" class="min-h-screen pt-24 opacity-0 transition-opacity duration-1000">
+
+        <header id="navbar" class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm transition-shadow duration-300">
+            <div class="container mx-auto px-4 md:px-8">
+                <nav class="flex justify-between items-center py-4">
+                    <a href="#" class="flex items-center text-2xl font-bold">
+                        <img 
+                            id="primary-logo"
+                            src="assets/logo-icon.png" 
+                            alt="CourseShare Logo Icon" 
+                            class="w-8 h-8 md:w-10 md:h-10"
+                            onerror="document.getElementById('primary-logo').style.display='none'; document.getElementById('fallback-logo').style.display='block';"
+                        >
+                        <svg id="fallback-logo" class="w-8 h-8 md:w-10 md:h-10 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                            <path d="M6.5 2H20v20c0 .5-.5 1-1 1H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                            <line x1="10" y1="9" x2="16" y2="9" />
+                            <line x1="10" y1="13" x2="16" y2="13" />
+                        </svg>
+                        <span class="gradient-text text-3xl">CourseShare</span>
+                    </a>
+
+                    <div class="hidden md:flex items-center space-x-6">
+                        <a href="aboutUs.html" class="text-gray-600 hover:text-[#2563eb] transition duration-200 font-medium">About Us</a>
+                        <a href="#" class="text-gray-600 hover:text-[#2563eb] transition duration-200 font-medium">Resources</a>
+                        <a href="#" class="text-gray-600 hover:text-[#2563eb] transition duration-200 font-medium">Alumni</a>
+                        <button onclick="openAuthModal('register')" class="btn-primary text-white px-5 py-2 rounded-full font-semibold shadow-lg">Register</button>
+                        <button onclick="openAuthModal('login')" class="text-[#2563eb] border border-[#2563eb] px-5 py-2 rounded-full font-semibold hover:bg-[#2563eb] hover:text-white transition duration-200">Login</button>
+                    </div>
+
+                    <button id="mobile-menu-button" aria-expanded="false" aria-controls="mobile-menu" class="md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100 focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    </button>
+                </nav>
+            </div>
+            <div id="mobile-menu" class="md:hidden absolute w-full bg-white rounded-b-lg shadow-xl p-4 space-y-3 z-40 border-t border-gray-100">
+                <a href="aboutUs.html" class="block text-gray-700 hover:text-[#2563eb] font-medium py-2 border-b border-gray-100">About Us</a>
+                <a href="#" class="block text-gray-700 hover:text-[#2563eb] font-medium py-2 border-b border-gray-100">Resources</a>
+                <a href="#" class="block text-gray-700 hover:text-[#2563eb] font-medium py-2 border-b border-gray-100">Alumni</a>
+                <button onclick="openAuthModal('register')" class="btn-primary block w-full text-white px-5 py-2 rounded-full font-semibold shadow-lg mt-4">Register</button>
+                <button onclick="openAuthModal('login')" class="block w-full text-center text-[#2563eb] border border-[#2563eb] px-5 py-2 rounded-full font-semibold hover:bg-[#2563eb] hover:text-white transition duration-200">Login</button>
+            </div>
+        </header>
+
+        <main class="container mx-auto px-4 md:px-8 py-16 sm:py-24">
+            <div class="flex flex-col lg:flex-row items-center justify-between">
+                
+                <div class="lg:w-1/2 text-center lg:text-left mb-12 lg:mb-0">
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 leading-tight mb-6">
+                        Unlock Your Potential with Shared <span class="gradient-text block">Course Materials</span>
+                    </h1>
+                    <p class="text-lg text-gray-600 mb-10 max-w-lg mx-auto lg:mx-0">
+                        Connect with students and alumni to access, share, and collaborate on study materials, notes, and past exams. Knowledge is better together.
+                    </p>
+                    
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center lg:justify-start">
+                        <a href="#" onclick="openAuthModal('login')" class="btn-primary text-white px-8 py-3 rounded-full text-lg font-bold">Start Sharing Now</a>
+                        <a href="#" class="text-[#2563eb] bg-white border-2 border-[#2563eb] px-8 py-3 rounded-full text-lg font-bold hover:bg-gray-100 transition duration-200">Learn How It Works</a>
+                    </div>
+                </div>
+
+                <div class="lg:w-1/2 flex justify-center p-4">
+                    <img
+                        src="assets/LaptopPic.png"
+                        onerror="this.onerror=null;this.src='https://placehold.co/600x400/2563eb/ffffff?text=Sharing+Resources';"
+                        alt="Digital resources being shared across a laptop and a tablet, symbolizing accessibility and modern education."
+                        class="w-full max-w-lg h-auto rounded-xl shadow-2xl transition duration-500 ease-in-out transform hover:scale-[1.02]"
+                    >
+                </div>
+
+            </div>
+        </main>
+
+        <footer class="bg-gray-800 text-white mt-12 py-6">
+            <div class="container mx-auto px-4 text-center text-sm">
+                &copy; 2024 CourseShare. All rights reserved. | <a href="#" class="text-[#10b981] hover:underline">Privacy Policy</a> | <a href="#" class="text-[#10b981] hover:underline">Terms of Service</a>
+            </div>
+        </footer>
+
+    </div>
+
+    <script src="script/indexScript.js"></script>
+</body>
+</html>

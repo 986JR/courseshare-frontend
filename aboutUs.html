@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About CourseShare | Community-Driven Academic Resources</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Lucide icons and Tailwind configuration
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#10b981',
+                        'secondary': '#2563eb',
+                        'accent': '#f59e0b',
+                        'text-gray': '#374151',
+                        'light-gray': '#f9fafb',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="styles/aboutUs.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body>
+
+    <div id="preloader">
+        <div class="spinner"></div>
+    </div>
+    
+    <div id="auth-modal" class="fixed inset-0 z-[100] transition-opacity duration-300" style="display: none;">
+        <div class="absolute inset-0 bg-black/50" onclick="closeAuthModal()"></div>
+
+        <div id="auth-modal-content" class="absolute top-0 right-0 h-full w-full max-w-sm bg-white shadow-2xl overflow-y-auto">
+            
+            <div class="p-8">
+                <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-900 transition-colors z-10">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+
+                <div id="auth-message-box" class="p-3 mb-4 rounded-lg text-sm transition-opacity duration-300 opacity-0" role="alert" style="display: none;"></div>
+
+                <div id="auth-view-container">
+                    
+                    <div id="login-view" class="space-y-6">
+                        <h2 class="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h2>
+                        <p class="text-gray-500">Log in to access your shared resources.</p>
+                        
+                        <form id="login-form" onsubmit="handleLogin(event)" class="mt-8 space-y-4">
+
+                            <div class="input-group">
+                                <input id="login-username" type="text" required oninput="validateInput(this)" class="input-field focus:ring-0" placeholder=" ">
+                                <label for="login-username" class="input-label">Username</label>
+                                <p id="login-username-msg" class="validation-message"></p>
+                            </div>
+
+                            <div class="input-group">
+                                <input id="login-password" type="password" required oninput="validateInput(this)" class="input-field focus:ring-0" placeholder=" ">
+                                <label for="login-password" class="input-label">Password</label>
+                                <p id="login-password-msg" class="validation-message"></p>
+                            </div>
+                            
+                            <button type="submit" class="btn-primary w-full text-white px-5 py-3 rounded-lg font-semibold shadow-lg mt-6">Login</button>
+                        </form>
+                        
+                        <p class="text-center text-sm text-gray-500">
+                            Don't have an account? 
+                            <a href="#" onclick="showRegisterView(event)" class="text-[#2563eb] font-medium hover:underline">Register here</a>
+                        </p>
+
+                        <div class="text-center pt-1 mt-5">
+                            <a href="#" onclick="showForgotPasswordView(event)" class="text-xs text-gray-500 hover:text-[#2563eb] hover:underline transition-colors">Forgot Password?</a>
+                        </div>   
+                    </div>
+
+                    <div id="register-view" class="space-y-6 hidden">
+                        <h2 class="text-3xl font-bold text-gray-900 mb-2">Join CourseShare</h2>
+                        <p class="text-gray-500">Create your account to start sharing and learning.</p>
+                        
+                        <form id="register-form" onsubmit="handleRegister(event)" class="mt-8 space-y-4">
+
+                            <div class="input-group">
+                                <input id="register-username" type="text" required oninput="validateRegisterUsername(this)" class="input-field focus:ring-0" placeholder=" ">
+                                <label for="register-username" class="input-label">Username</label>
+                                <p id="register-username-msg" class="validation-message"></p>
+                            </div>
+
+                            <div class="input-group">
+                                <input id="register-email" type="email" required oninput="validateRegisterEmail(this)" class="input-field focus:ring-0" placeholder=" ">
+                                <label for="register-email" class="input-label">Email Address</label>
+                                <p id="register-email-msg" class="validation-message"></p>
+                            </div>
+
+                            <div class="input-group">
+                                <input id="register-password" type="password" required oninput="validateRegisterPassword(this)" class="input-field focus:ring-0" placeholder=" ">
+                                <label for="register-password" class="input-label">Password</label>
+                                <p id="register-password-msg" class="validation-message"></p>
+                            </div>
+
+                            <div class="input-group">
+                                <input id="register-confirm-password" type="password" required oninput="validateRegisterConfirmPassword(this)" class="input-field focus:ring-0" placeholder=" ">
+                                <label for="register-confirm-password" class="input-label">Confirm Password</label>
+                                <p id="register-confirm-password-msg" class="validation-message"></p>
+                            </div>
+
+                            <button type="submit" class="btn-primary w-full text-white px-5 py-3 rounded-lg font-semibold shadow-lg mt-6">Register Account</button>
+                        </form>
+
+                        <p class="text-center text-sm text-gray-500">
+                            Already have an account?
+                            <a href="#" onclick="showLoginView(event)" class="text-[#2563eb] font-medium hover:underline">Login here</a>
+                        </p>
+                    </div>
+
+                    <div id="forgot-password-view" class="space-y-6 hidden">
+                        <h2 class="text-3xl font-bold text-gray-900 mb-2">Reset Password</h2>
+                        <p class="text-gray-500">Enter your email address and we'll send you an OTP to reset your password.</p>
+                        
+                        <form id="forgot-password-form" onsubmit="handleForgotPassword(event)" class="mt-8 space-y-4">
+
+                            <div class="input-group">
+                                <input id="forgot-email" type="email" required oninput="validateRegisterEmail(this)" class="input-field focus:ring-0" placeholder=" ">
+                                <label for="forgot-email" class="input-label">Email Address</label>
+                                <p id="forgot-email-msg" class="validation-message"></p>
+                            </div>
+
+                            <button type="submit" class="btn-primary w-full text-white px-5 py-3 rounded-lg font-semibold shadow-lg mt-6">Send OTP</button>
+                        </form>
+
+                        <p class="text-center text-sm text-gray-500">
+                            <a href="#" onclick="showLoginView(event)" class="text-[#2563eb] font-medium hover:underline">&larr; Back to Login</a>
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="main-content" class="min-h-screen pt-24 opacity-0 transition-opacity duration-1000">
+    
+    <header id="navbar" class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm transition-shadow duration-300">
+        <div class="container mx-auto px-4 md:px-8">
+            <nav class="flex justify-between items-center py-4">
+                <a href="index.html" class="flex items-center text-2xl font-bold">
+                    <img 
+                        id="primary-logo"
+                        src="assets/logo-icon.png" 
+                        alt="CourseShare Logo Icon" 
+                        class="w-8 h-8 md:w-10 md:h-10"
+                        onerror="document.getElementById('primary-logo').style.display='none';
+                        document.getElementById('fallback-logo').style.display='block';"
+                    >
+                    <svg id="fallback-logo" class="w-8 h-8 md:w-10 md:h-10 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                        <path d="M6.5 2H20v20c0 .5-.5 1-1 1H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                        <line x1="10" y1="9" x2="16" y2="9" />
+                        <line x1="10" y1="13" x2="16" y2="13" />
+                    </svg>
+                    <span class="gradient-text text-3xl">CourseShare</span>
+                </a>
+
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="aboutUs.html" class="text-gray-600 hover:text-[#2563eb] transition duration-200 font-medium">About Us</a>
+                    <a href="#" class="text-gray-600 hover:text-[#2563eb] transition duration-200 font-medium">Resources</a>
+                    <a href="#" class="text-gray-600 hover:text-[#2563eb] transition duration-200 font-medium">Alumni</a>
+                    <button onclick="openAuthModal('register')" class="btn-primary text-white px-5 py-2 rounded-full font-semibold shadow-lg">Register</button>
+                    <button onclick="openAuthModal('login')" class="text-[#2563eb] border border-[#2563eb] px-5 py-2 rounded-full font-semibold hover:bg-[#2563eb] hover:text-white transition duration-200">Login</button>
+                </div>
+
+                <button id="mobile-menu-button" aria-expanded="false" aria-controls="mobile-menu" class="md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
+            </nav>
+        </div>
+
+        <div id="mobile-menu" class="md:hidden absolute w-full bg-white rounded-b-lg shadow-xl p-4 space-y-3 z-40 border-t border-gray-100">
+            <a href="about.html" class="block text-gray-700 hover:text-[#2563eb] font-medium py-2 border-b border-gray-100">About Us</a>
+            <a href="#" class="block text-gray-700 hover:text-[#2563eb] font-medium py-2 border-b border-gray-100">Resources</a>
+            <a href="#" class="block text-gray-700 hover:text-[#2563eb] font-medium py-2 border-b border-gray-100">Alumni</a>
+            <button onclick="openAuthModal('register')" class="btn-primary block w-full text-white px-5 py-2 rounded-full font-semibold shadow-lg mt-4">Register</button>
+            <button onclick="openAuthModal('login')" class="block w-full text-center text-[#2563eb] border border-[#2563eb] px-5 py-2 rounded-full font-semibold hover:bg-[#2563eb] hover:text-white transition duration-200">Login</button>
+        </div>
+    </header>
+
+    <main>
+        
+        <section class="relative bg-light-gray pt-16 md:pt-20 pb-12 overflow-hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center gap-8">
+                
+                <div class="md:w-1/2 text-center md:text-left">
+                    <h1 class="text-5xl md:text-6xl font-extrabold text-text-gray leading-tight">
+                        <span class="gradient-text block">About CourseShare</span>
+                    </h1>
+                    <p class="mt-4 text-xl md:text-2xl text-gray-500 font-medium">
+                        A community-driven platform for sharing academic resources and empowering learning.
+                    </p>
+                </div>
+                
+                <div class="md:w-1/2">
+                    <img 
+                        src="assets/allPeople.png" 
+                        alt="A picture of students studying together, laptops and books on tables, showing collaboration" 
+                        class="w-full h-auto object-cover rounded-2xl shadow-xl transition-transform duration-500 hover:scale-[1.02]"
+                    >
+                </div>
+            </div>
+        </section>
+
+        <section class="py-16 md:py-24 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+                    
+                    <div class="lg:pr-10">
+                        <h2 class="text-4xl font-extrabold text-text-gray">Our Mission</h2>
+                        <div class="section-divider !mx-0 lg:!mx-0 !w-12 !mb-6"></div>
+                        <p class="mt-4 text-xl text-gray-600 leading-relaxed">
+                            CourseShare is a digital academic resource hub designed to help students access and share study materials effortlessly.
+                        </p>
+                        <p class="mt-4 text-xl text-gray-600 leading-relaxed font-semibold">
+                            We believe learning becomes stronger when knowledge flows freely from student to student, class to class, and generation to generation.
+                        </p>
+                    </div>
+
+                    <div class="lg:border-l lg:pl-10 lg:border-gray-200">
+                        <h2 class="text-4xl font-extrabold text-text-gray">Our Vision</h2>
+                        <div class="section-divider !mx-0 lg:!mx-0 !w-12 !mb-6"></div>
+                        <p class="mt-4 text-xl text-gray-600 leading-relaxed font-medium">
+                            To become the leading academic resource-sharing platform in Africa connecting learners with knowledge, one upload at a time.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-16 md:py-24 bg-light-gray">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+                    
+                    <div class="p-8 bg-white rounded-xl clean-shadow transition duration-300 hover:shadow-lg">
+                        <h3 class="text-3xl font-extrabold text-secondary mb-6 flex items-center">
+                            <i data-lucide="users" class="icon w-8 h-8 mr-3"></i> Who We Serve
+                        </h3>
+                        <ul class="space-y-4 text-lg text-gray-700 list-disc list-inside">
+                            <li>University students</li>
+                            <li>College students</li>
+                            <li>Alumni who still want to learn & contribute</li>
+                            <li>Anyone seeking academic notes, assignments, books, past papers, and guides</li>
+                        </ul>
+                    </div>
+
+                    <div class="p-8 bg-white rounded-xl clean-shadow transition duration-300 hover:shadow-lg">
+                        <h3 class="text-3xl font-extrabold text-secondary mb-6 flex items-center">
+                            <i data-lucide="lightbulb" class="icon w-8 h-8 mr-3"></i> Why We Exist
+                        </h3>
+                        <p class="text-lg text-gray-700 mb-4">
+                            Students struggle to find proper study notes especially during exams or when switching devices.
+                        </p>
+                        <p class="text-lg text-gray-700 mb-6">
+                            WhatsApp groups get messy, files get lost, alumni leave, years pass and knowledge disappears.
+                            CourseShare fixes that.
+                        </p>
+                        <p class="text-lg font-medium text-primary">
+                            We store resources centrally, neatly, searchable and forever accessible.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-16 md:py-24 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h2 class="text-4xl md:text-5xl font-extrabold text-text-gray">
+                    What We <span class="gradient-text">Offer</span>
+                </h2>
+                <div class="section-divider"></div>
+
+                <div class="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                    <div class="p-6 bg-light-gray rounded-xl clean-shadow flex flex-col items-center text-center">
+                        <i data-lucide="folder" class="icon w-12 h-12 text-primary mb-3"></i>
+                        <h4 class="text-xl font-bold text-text-gray mb-2">Course Materials</h4>
+                        <p class="text-gray-600">Notes, slides, assignments, past papers, and more.</p>
+                    </div>
+
+                    <div class="p-6 bg-light-gray rounded-xl clean-shadow flex flex-col items-center text-center">
+                        <i data-lucide="filter" class="icon w-12 h-12 text-primary mb-3"></i>
+                        <h4 class="text-xl font-bold text-text-gray mb-2">Filtered & Searchable</h4>
+                        <p class="text-gray-600">No more searching blindly. Find exactly what you need.</p>
+                    </div>
+
+                    <div class="p-6 bg-light-gray rounded-xl clean-shadow flex flex-col items-center text-center">
+                        <i data-lucide="message-square" class="icon w-12 h-12 text-primary mb-3"></i>
+                        <h4 class="text-xl font-bold text-text-gray mb-2">Reviews & Comments</h4>
+                        <p class="text-gray-600">Learn from others before you download the resources.</p>
+                    </div>
+
+                    <div class="p-6 bg-light-gray rounded-xl clean-shadow flex flex-col items-center text-center">
+                        <i data-lucide="star" class="icon w-12 h-12 text-accent mb-3 fill-accent"></i>
+                        <h4 class="text-xl font-bold text-text-gray mb-2">Ratings System</h4>
+                        <p class="text-gray-600">Best materials rise to the top through community rating.</p>
+                    </div>
+
+                    <div class="p-6 bg-light-gray rounded-xl clean-shadow flex flex-col items-center text-center sm:col-span-2 lg:col-span-1 lg:col-start-2">
+                        <i data-lucide="handshake" class="icon w-12 h-12 text-primary mb-3"></i>
+                        <h4 class="text-xl font-bold text-text-gray mb-2">Community Collaboration</h4>
+                        <p class="text-gray-600">Everyone can easily contribute to the growing library.</p>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <section class="py-16 md:py-24 bg-light-gray">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h2 class="text-4xl md:text-5xl font-extrabold text-text-gray">
+                    Our <span class="text-primary">Value Statement</span>
+                </h2>
+                <div class="section-divider"></div>
+
+                <div class="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    
+                    <div class="p-6 bg-white rounded-xl shadow-lg border-t-4 border-primary hover:scale-[1.03] transition-transform duration-300">
+                        <i data-lucide="book-open" class="icon w-10 h-10 text-primary mx-auto mb-3"></i>
+                        <h4 class="text-2xl font-bold text-text-gray mb-2">Open Learning</h4>
+                        <p class="text-gray-600 font-medium">Knowledge should be accessible, not hidden.</p>
+                    </div>
+
+                    <div class="p-6 bg-white rounded-xl shadow-lg border-t-4 border-secondary hover:scale-[1.03] transition-transform duration-300">
+                        <i data-lucide="users" class="icon w-10 h-10 text-secondary mx-auto mb-3"></i>
+                        <h4 class="text-2xl font-bold text-text-gray mb-2">Collaboration</h4>
+                        <p class="text-gray-600 font-medium">Students learn better when they share.</p>
+                    </div>
+                    
+                    <div class="p-6 bg-white rounded-xl shadow-lg border-t-4 border-accent hover:scale-[1.03] transition-transform duration-300">
+                        <i data-lucide="rocket" class="icon w-10 h-10 text-accent mx-auto mb-3"></i>
+                        <h4 class="text-2xl font-bold text-text-gray mb-2">Empowerment</h4>
+                        <p class="text-gray-600 font-medium">Good notes = better grades = better futures.</p>
+                    </div>
+
+                    <div class="p-6 bg-white rounded-xl shadow-lg border-t-4 border-gray-500 hover:scale-[1.03] transition-transform duration-300">
+                        <i data-lucide="trending-up" class="icon w-10 h-10 text-gray-500 mx-auto mb-3"></i>
+                        <h4 class="text-2xl font-bold text-text-gray mb-2">Continuous Growth</h4>
+                        <p class="text-gray-600 font-medium">Alumni knowledge helps future students.</p>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <section class="py-16 md:py-24 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                
+                <div class="mb-16">
+                    <h3 class="text-4xl font-extrabold text-text-gray">Our Journey</h3>
+                    <div class="section-divider !mb-6"></div>
+                    <p class="mt-4 max-w-3xl mx-auto text-xl text-gray-600 leading-relaxed">
+                        CourseShare started as a simple idea among students who wanted easy access to shared materials. It grew into a platform built with passion, code, and a vision for a smarter academic community.
+                    </p>
+                </div>
+
+                <div class="bg-light-gray p-10 md:p-16 rounded-3xl shadow-2xl">
+                    <h2 class="text-4xl md:text-5xl font-bold text-text-gray leading-tight">
+                        Become a part of the <span class="gradient-text">movement</span>
+                    </h2>
+                    <p class="mt-4 text-xl text-gray-600 mb-10">
+                        Share what you know, learn what you need.
+                    </p>
+                    <div class="flex flex-col sm:flex-row justify-center gap-4">
+                        <button class="btn-primary flex items-center justify-center !rounded-xl !py-3 !px-6">
+                            <i data-lucide="cloud-upload" class="w-5 h-5 mr-2"></i> Upload Notes
+                        </button>
+                        <button class="btn-outline flex items-center justify-center !rounded-xl !py-3 !px-6 !border-primary !text-primary hover:!bg-primary hover:!text-white">
+                            <i data-lucide="search" class="w-5 h-5 mr-2"></i> Browse Resources
+                        </button>
+                        <button onclick="openAuthModal('register')" class="text-[#2563eb] border border-[#2563eb] px-6 py-3 rounded-xl font-semibold hover:bg-[#2563eb] hover:text-white transition duration-200 flex items-center justify-center">
+                            <i data-lucide="user-plus" class="w-5 h-5 mr-2"></i> Join Community
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-12 bg-white text-center border-t border-gray-100">
+            <p class="text-xl font-semibold text-text-gray">
+                CourseShare — <span class="text-primary">Knowledge shared today, empowers tomorrow.</span>
+            </p>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-800 text-white mt-12 py-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-sm text-gray-400">
+                &copy; 2024 CourseShare. All rights reserved. | 
+                <a href="#" class="text-[#10b981] hover:underline transition duration-150">Privacy Policy</a> |
+                <a href="#" class="text-[#10b981] hover:underline transition duration-150">Terms of Service</a>
+            </p>
+        </div>
+    </footer>
+
+    </div> 
+    <script src="script/aboutUsScrit.js">
+       
+    </script>
+</body>
+</html>

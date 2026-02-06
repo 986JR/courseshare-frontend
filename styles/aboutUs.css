@@ -1,0 +1,161 @@
+
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff; 
+            overflow-x: hidden;
+            color: #374151;
+        }
+
+        /* 1. Gradient Text for the brand name and main headings */
+        .gradient-text {
+            background-image: linear-gradient(to right, #10b981, #2563eb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* 2. Custom CSS for the Preloader Animation */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #ffffff; 
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #ccc;
+            border-top-color: #2563eb;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* 3. Style for the primary CTA button */
+        .btn-primary {
+            background: linear-gradient(135deg, #10b981, #2563eb);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
+        }
+        .btn-primary:hover {
+            opacity: 0.9;
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.6);
+            transform: translateY(-2px);
+        }
+
+        /* 4. Custom Section Divider Styling */
+        .section-divider {
+            @apply h-1 w-20 mx-auto bg-primary rounded-full mt-4 mb-12;
+        }
+
+        /* 5. Utility for a clean card shadow */
+        .clean-shadow {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* 6. Utility to include Lucide icons */
+        .icon {
+            stroke-width: 2.5;
+        }
+
+        /* --- MOBILE MENU ANIMATION --- */
+        #mobile-menu {
+            display: none;
+            opacity: 0;
+            transform: translateY(-100%); 
+            transition: opacity 0.4s ease-out, transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        #mobile-menu.mobile-menu-open {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- AUTH MODAL STYLES --- */
+        #auth-modal {
+            background-color: rgba(0, 0, 0, 0.4);
+            display: none; 
+        }
+        
+        #auth-modal.open {
+            display: block;
+        }
+        
+        #auth-modal-content {
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        #auth-modal.open #auth-modal-content {
+            transform: translateX(0);
+        }
+        
+        /* --- FLOATING LABEL UX --- */
+        .input-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group .input-field {
+            padding: 1rem 1rem 0.5rem;
+            width: 100%;
+            border: 1px solid #d1d5db; 
+            border-radius: 0.5rem; 
+            background-color: transparent; 
+            outline: none; 
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .input-group .input-label {
+            position: absolute;
+            top: 50%; 
+            left: 1rem;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: #9ca3af; 
+            font-size: 1rem; 
+            transition: all 0.2s ease-out;
+            background-color: transparent;
+        }
+        
+        .input-group .input-field:focus + .input-label,
+        .input-group .input-field:valid + .input-label,
+        .input-group .input-field:placeholder-shown:not(:empty) + .input-label {
+            top: 0;
+            font-size: 0.75rem; 
+            color: #2563eb; 
+            background-color: #ffffff;
+            padding: 0 0.25rem;
+            transform: translateY(-50%);
+        }
+
+        .input-group .input-field:focus {
+            border-color: #2563eb;
+        }
+        
+        .input-group .input-field:invalid:not(:placeholder-shown):not(:focus) {
+            border-color: #ef4444;
+        }
+
+        .validation-message {
+            font-size: 0.75rem;
+            color: #ef4444; 
+            margin-top: 0.25rem;
+            height: 1rem;
+            line-height: 1;
+        }
+    
