@@ -16,7 +16,7 @@ const editProfileModal = document.getElementById('editProfileModal');
 const deleteAccountModal = document.getElementById('deleteAccountModal');
 const myFilesModal = document.getElementById('myFilesModal');
 
-const API_BASE_URL = "http://localhost:8080/api";
+const API_BASE_URL = "https://courseshare-backend.onrender.com/api";
 let currentActiveCourse = null;
 let currentFileForReview = null;
 let selectedRating = 0;
