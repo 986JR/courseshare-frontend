@@ -531,10 +531,7 @@ async function handleLogin(e) {
             }));
 
             document.getElementById('login-form').reset();
-            setTimeout(() => {
-                closeAuthModal();
-                window.location.href = "dashboard.html";
-            }, 1200);
+            setTimeout(() => window.location.href = "dashboard.html", 1200);
         } else {
             const errorMessage = data.message || "Login failed. Check your credentials.";
             showToast(errorMessage, 'error');
